@@ -1,3 +1,5 @@
+[Drive Link to the output models](https://drive.google.com/drive/folders/19NbqliCFQh1gM4S1ky9_JXx3RVfcWm2J)
+
 # Repository Structure
 * `squad_span_qa.py` contains the main source code for data loading and the training of each of the three models.
 * `ExtractiveQuestionAnswering.ipynb` includes the actual training, Exact Match (EM) based error analysis for ten randomly chosen wrong predictions, and the basic comparison analysis of the trained models.
