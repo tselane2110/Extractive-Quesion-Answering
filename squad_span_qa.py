@@ -48,11 +48,11 @@ SQUAD_URLS = {
 NEG = -1e9  # mask value for logits (applied after casting logits to float32)
 
 PRESETS = {
-    "token_cls": dict(encoder="bert-base-uncased", head="linear", lr=3e-5, epochs=2, batch_size=32,
+    "token_cls": dict(encoder="bert-base-uncased", head="linear", lr=3e-5, epochs=3, batch_size=32,
                       ce_warmup_epochs=0),
-    "rl": dict(encoder="bert-base-uncased", head="linear", lr=1e-5, epochs=2, batch_size=32,
+    "rl": dict(encoder="bert-base-uncased", head="linear", lr=1e-5, epochs=3, batch_size=32,
                ce_warmup_epochs=0),
-    "roberta": dict(encoder="roberta-base", head="mlp", lr=3e-5, epochs=2, batch_size=32,
+    "roberta": dict(encoder="roberta-base", head="mlp", lr=3e-5, epochs=3, batch_size=32,
                     ce_warmup_epochs=0),
 }
 
