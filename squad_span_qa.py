@@ -40,6 +40,7 @@ from torch.distributions import Categorical
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 from transformers import AutoConfig, AutoModel, AutoTokenizer, get_linear_schedule_with_warmup
+import time 
 
 SQUAD_URLS = {
     "train": "https://rajpurkar.github.io/SQuAD-explorer/dataset/train-v1.1.json",
@@ -56,6 +57,7 @@ PRESETS = {
                     ce_warmup_epochs=0),
 }
 
+train_start = time.perf_counter()
 
 # --------------------------------------------------------------------------------------
 # Utilities
@@ -408,8 +410,10 @@ def train(args, model, tok, train_feats, val_ex, val_feats, collate, device, amp
     sched = get_linear_schedule_with_warmup(opt, int(args.warmup_ratio * total_steps), total_steps)
 
     best_f1, history = -1.0, []
+
     for epoch in range(args.epochs):
         use_rl = args.approach == "rl" and epoch >= args.ce_warmup_epochs
+        epoch_start = time.perf_counter()
         model.train()
         opt.zero_grad(set_to_none=True)
         run_loss = run_reward = 0.0
@@ -446,6 +450,9 @@ def train(args, model, tok, train_feats, val_ex, val_feats, collate, device, amp
                 sched.step()
                 opt.zero_grad(set_to_none=True)
             pbar.set_postfix(ce=f"{run_loss:.3f}", **({"reward": f"{run_reward:.3f}"} if use_rl else {}))
+        epoch_elapsed = time.perf_counter() - epoch_start
+        total_elapsed = time.perf_counter() - train_start
+        print(f"Epoch {epoch + 1}/{args.epochs} | Epoch time: {epoch_elapsed:.2f}s | Total elapsed: {total_elapsed:.2f}s")
 
         rec = {"epoch": epoch + 1, "train_ce": run_loss, "mode": "rl" if use_rl else "ce"}
         if val_feats:
